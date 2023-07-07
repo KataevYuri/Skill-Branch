@@ -14,11 +14,14 @@ import 'package:flutter_test/flutter_test.dart';
 ///
 void runTestLesson1Task2() {
   testWidgets('module2', (WidgetTester tester) async {
-    const TextStyle correctStyle =
-        const TextStyle(fontSize: 38, fontWeight: FontWeight.w900, color: Colors.white);
+    const TextStyle correctStyle = TextStyle(
+        fontSize: 38, fontWeight: FontWeight.w900, color: Colors.white);
     await tester.pumpWidget(MyApp());
-    expect((tester.firstWidget(find.textContaining("Test your")) as Text).style, correctStyle);
+    expect((tester.firstWidget(find.textContaining("Test your")) as Text).style,
+        correctStyle);
     expect(
-        (tester.firstWidget(find.textContaining("Test your")) as Text).textAlign, TextAlign.center);
+        (tester.firstWidget(find.textContaining("Test your")) as Text)
+            .textAlign,
+        TextAlign.center);
   });
 }
