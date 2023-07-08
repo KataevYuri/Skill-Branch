@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 enum GameState { readyToStart, waiting, canBeStopped }
@@ -22,6 +25,9 @@ class _MyAppState extends State<MyApp> {
     GameState.canBeStopped: Color(0xFFE02D47)
   };
 
+  Timer? waitingTimer;
+  Timer? stoppableTimer;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -39,16 +45,16 @@ class _MyAppState extends State<MyApp> {
               textAlign: TextAlign.center,
             ),
           ),
-          const Align(
+          Align(
             alignment: Alignment.center,
             child: ColoredBox(
-              color: Color(0xFF6D6D6D),
+              color: const Color(0xFF6D6D6D),
               child: SizedBox(
                 height: 200,
                 width: 300,
                 child: Text(
-                  "",
-                  style: TextStyle(
+                  millisecondsText,
+                  style: const TextStyle(
                       fontSize: 36,
                       fontWeight: FontWeight.w500,
                       color: Colors.white),
@@ -64,12 +70,15 @@ class _MyAppState extends State<MyApp> {
                 switch (gameState) {
                   case GameState.readyToStart:
                     gameState = GameState.waiting;
+                    millisecondsText = "";
+                    _startWaitingTimer();
                     break;
                   case GameState.waiting:
-                    gameState = GameState.canBeStopped;
+                    //gameState = GameState.canBeStopped;
                     break;
                   case GameState.canBeStopped:
                     gameState = GameState.readyToStart;
+                    stoppableTimer?.cancel();
                     break;
                 }
               }),
@@ -103,5 +112,31 @@ class _MyAppState extends State<MyApp> {
       case GameState.canBeStopped:
         return "STOP";
     }
+  }
+
+  void _startWaitingTimer() {
+    final int randomMilliseconds = Random().nextInt(4000) + 1000;
+    debugPrint('$randomMilliseconds');
+    waitingTimer = Timer(Duration(milliseconds: randomMilliseconds), () {
+      setState(() {
+        gameState = GameState.canBeStopped;
+      });
+      _startStoppableTimer();
+    });
+  }
+
+  void _startStoppableTimer() {
+    stoppableTimer = Timer.periodic(const Duration(milliseconds: 16), (timer) {
+      setState(() {
+        millisecondsText = "${timer.tick * 16} ms";
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    waitingTimer?.cancel();
+    stoppableTimer?.cancel();
+    super.dispose();
   }
 }
