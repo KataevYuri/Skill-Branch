@@ -16,7 +16,7 @@ void runTestLesson1Task2() {
   testWidgets('module2', (WidgetTester tester) async {
     const TextStyle correctStyle = TextStyle(
         fontSize: 38, fontWeight: FontWeight.w900, color: Colors.white);
-    await tester.pumpWidget(MyApp());
+    await tester.pumpWidget(const MyApp());
     expect((tester.firstWidget(find.textContaining("Test your")) as Text).style,
         correctStyle);
     expect(
