@@ -16,7 +16,11 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   String millisecondsText = "";
   GameState gameState = GameState.readyToStart;
-  Color buttonStateColor = const Color(0xFF40CA88);
+  final buttonStateColors = const <GameState, Color>{
+    GameState.readyToStart: Color(0xFF40CA88),
+    GameState.waiting: Color(0xFFE0982D),
+    GameState.canBeStopped: Color(0xFFE02D47)
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -60,20 +64,17 @@ class _MyAppState extends State<MyApp> {
                 switch (gameState) {
                   case GameState.readyToStart:
                     gameState = GameState.waiting;
-                    buttonStateColor = const Color(0xFFE0982D);
                     break;
                   case GameState.waiting:
                     gameState = GameState.canBeStopped;
-                    buttonStateColor = const Color(0xFFE02D47);
                     break;
                   case GameState.canBeStopped:
                     gameState = GameState.readyToStart;
-                    buttonStateColor = const Color(0xFF40CA88);
                     break;
                 }
               }),
               child: ColoredBox(
-                color: buttonStateColor,
+                color: buttonStateColors[gameState]!,
                 child: SizedBox(
                   height: 200,
                   width: 200,
